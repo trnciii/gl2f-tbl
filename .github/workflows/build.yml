@@ -1,0 +1,62 @@
+name: build
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - 'build'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        target:
+          - windows
+          - macos
+        include:
+          - target: windows
+            os: windows-latest
+          - target: macos
+            os: macos-latest
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - run: pip install pyinstaller
+      - run: pip install -r requirements.txt
+
+      - run: pyinstaller main.py --name gl2f-tbl --onefile --noconsole
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}
+          path: dist/*
+
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: windows
+      - run: zip windows.zip windows/*
+
+      - uses: actions/download-artifact@v1
+        with:
+          name: macos
+      - run: zip macos.zip macos/*
+
+
+      - name: Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            windows.zip
+            macos.zip
