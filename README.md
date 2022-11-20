@@ -1,4 +1,4 @@
-# GL2 Familiar Tabulator
+# GL2F Tabulator
 
 GL2 family ファンクラブサイトの更新をGUIでチェックするアプリです。
 とりあえず動くものができたので公開しています。
