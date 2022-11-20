@@ -13,7 +13,7 @@ def selected(tree, items):
 def create_copy_url(tree, items):
 	def f():
 		text = ' '.join(map(content_url, selected(tree, items)))
-		print(text, flush=True)
+		print('copying text', text, flush=True)
 		pyperclip.copy(text)
 	return f
 
@@ -23,6 +23,7 @@ def create_copy_title(tree, items):
 			lambda i: i['values']['title'],
 			selected(tree, items)
 		))
+		print('copying text', text, flush=True)
 		pyperclip.copy(text)
 	return f
 
@@ -32,13 +33,16 @@ def create_copy_titleurl(tree, items):
 			lambda i: i['values']['title'] + ' ' + content_url(i),
 			selected(tree, items)
 		))
+		print('copying text', text, flush)
 		pyperclip.copy(text)
 	return f
 
 def create_open(tree, items):
 	def f():
 		for i in selected(tree, items):
-			webbrowser.open(content_url(i), new=0, autoraise=True)
+			url = content_url(i)
+			print('opening', url, flush=True)
+			webbrowser.open(url, new=0, autoraise=True)
 	return f
 
 
@@ -56,6 +60,7 @@ def add_menu(tree, items):
 		menu.add_command(label=k, command=v(tree,items))
 
 	tree.bind('<Button-3>', lambda e:menu.post(e.x_root, e.y_root))
+	tree.bind('<Button-2>', lambda e:menu.post(e.x_root, e.y_root))
 
 
 def create_table(root, cols, items):
