@@ -28,13 +28,15 @@ jobs:
           python-version: 3.x
       - run: pip install pyinstaller
       - run: pip install -r requirements.txt
+      - if: matrix.target == 'macos'
+        run: brew install python-tk
 
       - run: pyinstaller main.py --name gl2f-tbl --onefile --noconsole
 
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}
-          path: dist/*
+          path: dist/gl2f-tbl.*
 
   release:
     needs: [build]
