@@ -1,2 +1,2 @@
 pyperclip
-git+https://github.com/trnciii/gl2f-cli@refactor#egg=gl2f
+git+https://github.com/trnciii/gl2f-cli@module#egg=gl2f
