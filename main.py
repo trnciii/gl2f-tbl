@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from gl2f.core import lister, terminal as term, date
-from gl2f.core.board import content_url
+import gl2f
+from gl2f.core import terminal as term, date
 import webbrowser
 import pyperclip
 
@@ -12,7 +12,7 @@ def selected(tree, items):
 
 def create_copy_url(tree, items):
 	def f():
-		text = ' '.join(map(content_url, selected(tree, items)))
+		text = ' '.join(map(gl2f.content_url, selected(tree, items)))
 		print('copying text', text, flush=True)
 		pyperclip.copy(text)
 	return f
@@ -30,7 +30,7 @@ def create_copy_title(tree, items):
 def create_copy_titleurl(tree, items):
 	def f():
 		text = ' '.join(map(
-			lambda i: i['values']['title'] + ' ' + content_url(i),
+			lambda i: i['values']['title'] + ' ' + gl2f.content_url(i),
 			selected(tree, items)
 		))
 		print('copying text', text, flush)
@@ -40,7 +40,7 @@ def create_copy_titleurl(tree, items):
 def create_open(tree, items):
 	def f():
 		for i in selected(tree, items):
-			url = content_url(i)
+			url = gl2f.content_url(i)
 			print('opening', url, flush=True)
 			webbrowser.open(url, new=0, autoraise=True)
 	return f
@@ -74,7 +74,7 @@ def create_table(root, cols, items):
 			'width':600,
 		},
 		'url': {
-			'format':content_url,
+			'format':gl2f.content_url,
 			'width':300,
 		},
 		'date': {
@@ -157,7 +157,7 @@ class App:
 			order='reservedAt:desc'
 			dump = False
 
-		self.items = lister.listers(args)
+		self.items = gl2f.list_contents(args)
 		self.update_table()
 
 
