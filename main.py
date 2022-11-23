@@ -33,7 +33,7 @@ def create_copy_titleurl(tree, items):
 			lambda i: i['values']['title'] + ' ' + gl2f.content_url(i),
 			selected(tree, items)
 		))
-		print('copying text', text, flush)
+		print('copying text', text, flush=True)
 		pyperclip.copy(text)
 	return f
 
