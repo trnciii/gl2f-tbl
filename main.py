@@ -115,7 +115,7 @@ def create_table(root, cols, items):
 class App:
 	def __init__(self):
 		self.root = tk.Tk()
-		self.root.title('GL2F Tabulator')
+		self.root.title('GL2F familiar tabulator')
 		# self.root.geometry('800x300')
 
 		self.run = self.root.mainloop
