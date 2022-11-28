@@ -5,6 +5,21 @@ from gl2f.core import terminal as term, date
 import webbrowser
 import pyperclip
 
+class const:
+	pages = gl2f.board.tree()
+	groups = ['girls2', 'lucky2', 'lovely2']
+	members = {g: list(gl2f.member.of_group(g).keys()) for g in groups}
+
+	page_order = [
+		'today',
+		'shangrila',
+		'blogs',
+		'radio',
+		'news',
+		'gtube',
+		'cm',
+	]
+
 
 def selected(tree, items):
 	for i in tree.selection():
@@ -131,31 +146,52 @@ class App:
 		self.header = ttk.Frame(self.root)
 		self.header.pack(fill = tk.BOTH, padx=16, pady=(8, 2))
 
-		self.board = ttk.Combobox(self.header, state='readonly', values=[
-			'today',
-			'blogs/girls2',
-			'blogs/lucky2',
-			'radio/girls2',
-			'radio/lucky2',
-			'news/family',
-			'news/girls2',
-			'news/lucky2',
-			'gtube',
-		])
 
-		self.board.current(0)
-		self.board.bind('<<ComboboxSelected>>', self.fetch)
-		self.board.pack(side=tk.LEFT)
+		keys = list(const.pages.keys())
+		keys.sort()
+		keys.sort(key=lambda x: const.page_order.index(x) if x in const.page_order else 1000)
+
+		self.board_first = ttk.Combobox(self.header, state='readonly', values=keys)
+
+		self.board_first.current(0)
+		self.board_first.bind('<<ComboboxSelected>>', self.create_board_second)
+		self.board_first.pack(side=tk.LEFT)
+
+		self.board_second = None
+
+
+	def create_board_second(self, *_):
+		try:
+			self.board_second.destroy()
+			self.board_second = None
+		except:
+			pass
+
+
+		order = ['today', 'family'] + const.groups + sum((const.members[g] for g in const.groups), [])
+
+		second = list(const.pages[self.board_first.get()])
+		second.sort()
+		second.sort(key=lambda x: order.index(x) if x in order else 1000)
+
+		if len(second)>0:
+			self.board_second = ttk.Combobox(self.header, state='readonly', values=second)
+			self.board_second.current(0)
+			self.board_second.bind('<<ComboboxSelected>>', self.fetch)
+			self.board_second.pack(side=tk.LEFT, padx=(4,0))
+
+		else:
+			self.fetch()
 
 
 	def fetch(self, *_):
-
 		class args:
-			board = self.board.get()
+			board = self.board_first.get() + (f'/{self.board_second.get()}' if self.board_second else '')
 			number=20
 			page=1
 			order='reservedAt:desc'
 			dump = False
+			group=None
 
 		self.items = gl2f.list_contents(args)
 		self.update_table()
