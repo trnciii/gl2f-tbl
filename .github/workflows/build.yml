@@ -39,7 +39,7 @@ jobs:
           path: dist/gl2f-tbl.*
 
   release:
-    if: github.ref == 'v*'
+    if: github.ref_name != 'build'
     needs: [build]
     runs-on: ubuntu-latest
     steps:
