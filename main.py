@@ -133,10 +133,7 @@ class App:
 		self.root.title('GL2 familiar tabulator')
 		# self.root.geometry('800x300')
 
-		self.run = self.root.mainloop
-
 		self.create_header()
-
 
 		self.columns = 'date', 'category', 'title'
 		self.fetch()
@@ -207,5 +204,8 @@ class App:
 
 
 if __name__ == '__main__':
+	import sys
+
 	app = App()
-	app.run()
+	if 'noloop' not in sys.argv:
+		app.root.mainloop()
