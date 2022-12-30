@@ -127,12 +127,18 @@ def create_table(root, cols, items):
 	return frame
 
 
+def create_root():
+	root = tk.Tk()
+	root.title('GL2 familiar tabulator')
+	# root.geometry('800x300')
+	root.bind('<Control-w>', lambda _:root.destroy())
+
+	return root
+
+
 class App:
 	def __init__(self):
-		self.root = tk.Tk()
-		self.root.title('GL2 familiar tabulator')
-		# self.root.geometry('800x300')
-		self.root.bind('<Control-w>', lambda _:self.root.destroy())
+		self.root = create_root()
 
 		self.create_header()
 
