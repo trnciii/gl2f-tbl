@@ -4,6 +4,7 @@ import gl2f
 from gl2f.core import util
 import webbrowser
 import pyperclip
+from datetime import datetime
 
 class const:
 	pages = gl2f.board.tree()
@@ -159,6 +160,10 @@ class App:
 
 		self.board_second = None
 
+		self.timestring = tk.StringVar()
+		self.timelabel = tk.Label(self.header, textvariable=self.timestring)
+		self.timelabel.pack(side=tk.RIGHT)
+
 
 	def create_board_second(self, *_):
 		try:
@@ -195,6 +200,8 @@ class App:
 
 		self.items = gl2f.list_contents(args)
 		self.update_table()
+
+		self.timestring.set(datetime.now().strftime('seen at %H:%M'))
 
 
 	def update_table(self):
