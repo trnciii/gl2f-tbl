@@ -6,7 +6,7 @@ GL2 family ファンクラブサイトの更新をGUIでチェックするアプ
 
 ![](./docs/app_all.png)
 
-**宣伝:heart:**
+:heart:**宣伝**:heart:
 コマンドラインで動く [gl2f-cli](https://github.com/trnciii/gl2f-cli) もよろしくお願いします。
 
 
