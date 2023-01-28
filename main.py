@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import gl2f
-from gl2f.core import terminal as term, date
+from gl2f.core import util
 import webbrowser
 import pyperclip
 
@@ -9,16 +9,7 @@ class const:
 	pages = gl2f.board.tree()
 	groups = ['girls2', 'lucky2', 'lovely2']
 	members = {g: list(gl2f.member.of_group(g).keys()) for g in groups}
-
-	page_order = [
-		'today',
-		'shangrila',
-		'blogs',
-		'radio',
-		'news',
-		'gtube',
-		'cm',
-	]
+	page_order = ['today'] + list(dict.fromkeys(i.split('/')[0] for i in gl2f.board.active()))
 
 
 def selected(tree, items):
@@ -93,7 +84,7 @@ def create_table(root, cols, items):
 			'width':300,
 		},
 		'date': {
-			'format':lambda i:date.to_datetime(i['openingAt']).strftime('%m/%d %H:%M:%S'),
+			'format':lambda i:util.to_datetime(i['openingAt']).strftime('%m/%d %H:%M:%S'),
 			'width':40
 		},
 	}
@@ -111,7 +102,7 @@ def create_table(root, cols, items):
 
 	for index, item in enumerate(items):
 		tree.insert(parent='', index='end', iid=index,
-			values=[term.declip(colspec[k]['format'](item)) for k in cols])
+			values=[colspec[k]['format'](item) for k in cols])
 
 
 	add_menu(tree, items)
