@@ -4,6 +4,7 @@ import gl2f
 from gl2f.core import util
 import webbrowser
 import pyperclip
+from datetime import datetime
 
 class const:
 	pages = gl2f.board.tree()
@@ -146,13 +147,22 @@ class App:
 		keys.sort()
 		keys.sort(key=lambda x: const.page_order.index(x) if x in const.page_order else 1000)
 
+
+		self.button = tk.Button(self.header, text='reload', command=self.fetch)
+		self.button.pack(side=tk.LEFT)
+
+
 		self.board_first = ttk.Combobox(self.header, state='readonly', values=keys)
 
 		self.board_first.current(0)
 		self.board_first.bind('<<ComboboxSelected>>', self.create_board_second)
-		self.board_first.pack(side=tk.LEFT)
+		self.board_first.pack(side=tk.LEFT, padx=(4, 0))
 
 		self.board_second = None
+
+		self.timestring = tk.StringVar()
+		self.timelabel = tk.Label(self.header, textvariable=self.timestring)
+		self.timelabel.pack(side=tk.RIGHT)
 
 
 	def create_board_second(self, *_):
@@ -190,6 +200,8 @@ class App:
 
 		self.items = gl2f.list_contents(args)
 		self.update_table()
+
+		self.timestring.set(datetime.now().strftime('seen at %H:%M'))
 
 
 	def update_table(self):
