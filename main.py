@@ -146,11 +146,16 @@ class App:
 		keys.sort()
 		keys.sort(key=lambda x: const.page_order.index(x) if x in const.page_order else 1000)
 
+
+		self.button = tk.Button(self.header, text='reload', command=self.fetch)
+		self.button.pack(side=tk.LEFT)
+
+
 		self.board_first = ttk.Combobox(self.header, state='readonly', values=keys)
 
 		self.board_first.current(0)
 		self.board_first.bind('<<ComboboxSelected>>', self.create_board_second)
-		self.board_first.pack(side=tk.LEFT)
+		self.board_first.pack(side=tk.LEFT, padx=(4, 0))
 
 		self.board_second = None
 
