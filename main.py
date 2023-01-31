@@ -91,7 +91,7 @@ def create_table(root, cols, items):
 	}
 
 	frame = ttk.Frame(root)
-	tree = ttk.Treeview(frame, columns=cols)
+	tree = ttk.Treeview(frame, columns=cols, height=max(10, len(items)))
 
 	tree.column('#0', stretch='no', width=0)
 	for k in cols:
