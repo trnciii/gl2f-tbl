@@ -1,2 +1,3 @@
 pyperclip
 git+https://github.com/trnciii/gl2f-cli@v0.3.5
+pyinstaller
