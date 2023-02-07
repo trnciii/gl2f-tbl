@@ -203,6 +203,8 @@ class App:
 
 		self.timestring.set(datetime.now().strftime('seen at %H:%M'))
 
+		print(f'fetched \'{args.board}\'')
+
 
 	def update_table(self):
 		try:
