@@ -52,8 +52,7 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: macos
-      - run: zip macos.zip macos/*
-
+      - run: zip -r macos.zip macos/*
 
       - name: Release
         id: create_release
@@ -62,3 +61,4 @@ jobs:
           files: |
             windows.zip
             macos.zip
+          draft: true
