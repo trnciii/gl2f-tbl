@@ -1,11 +1,10 @@
 name: build
 
 on:
+  pull_request:
   push:
     tags:
       - 'v*'
-    branches:
-      - 'build'
 
 jobs:
   build:
@@ -39,7 +38,7 @@ jobs:
           path: dist/gl2f-tbl.*
 
   release:
-    if: github.ref_name != 'build'
+    if: startsWith(github.ref, 'refs/tags')
     needs: [build]
     runs-on: ubuntu-latest
     steps:
