@@ -5,6 +5,7 @@ from gl2f.core import util
 import webbrowser
 import pyperclip
 from datetime import datetime
+import urllib.parse
 
 class const:
 	pages = gl2f.board.tree()
@@ -52,6 +53,21 @@ def create_open(tree, items):
 			webbrowser.open(url, new=0, autoraise=True)
 	return f
 
+def create_tweet(tree, items):
+	def f():
+		for i in selected(tree, items):
+			url = gl2f.content_url(i)
+			_, member = gl2f.member.from_id(i.get('categoryId'))
+			tags = [member['fullname'], gl2f.board.get('id', i['boardId'])['group']] if member else []
+
+			text = f"{url} {' '.join(f'#{t}' for t in tags)}"
+			intent = f'https://twitter.com/intent/tweet?text={urllib.parse.quote(text)}'
+
+			print('copy: ', text)
+			pyperclip.copy(text)
+			print('open', intent, flush=True)
+			webbrowser.open(intent, new=0, autoraise=True)
+	return f
 
 def add_menu(tree, items):
 	create = {
@@ -59,6 +75,7 @@ def add_menu(tree, items):
 		'copy url': create_copy_url,
 		'copy title': create_copy_title,
 		'copy title + url': create_copy_titleurl,
+		'tweet': create_tweet,
 	}
 
 	menu = tk.Menu(tree, tearoff=0)
