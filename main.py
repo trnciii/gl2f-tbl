@@ -21,7 +21,7 @@ def selected(tree, items):
 def create_copy_url(tree, items):
 	def f():
 		text = ' '.join(map(gl2f.content_url, selected(tree, items)))
-		print('copying text', text, flush=True)
+		print(f'copy: {text}', flush=True)
 		pyperclip.copy(text)
 	return f
 
@@ -31,7 +31,7 @@ def create_copy_title(tree, items):
 			lambda i: i['values']['title'],
 			selected(tree, items)
 		))
-		print('copying text', text, flush=True)
+		print(f'copy: {text}', flush=True)
 		pyperclip.copy(text)
 	return f
 
@@ -41,7 +41,7 @@ def create_copy_titleurl(tree, items):
 			lambda i: i['values']['title'] + ' ' + gl2f.content_url(i),
 			selected(tree, items)
 		))
-		print('copying text', text, flush=True)
+		print(f'copy: {text}', flush=True)
 		pyperclip.copy(text)
 	return f
 
@@ -49,7 +49,7 @@ def create_open(tree, items):
 	def f():
 		for i in selected(tree, items):
 			url = gl2f.content_url(i)
-			print('opening', url, flush=True)
+			print(f'open: {url}', flush=True)
 			webbrowser.open(url, new=0, autoraise=True)
 	return f
 
