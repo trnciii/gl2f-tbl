@@ -10,7 +10,7 @@ class const:
 	pages = gl2f.board.tree()
 	groups = ['girls2', 'lucky2', 'lovely2']
 	members = {g: list(gl2f.member.of_group(g).keys()) for g in groups}
-	page_order = ['today'] + list(dict.fromkeys(i.split('/')[0] for i in gl2f.board.active()))
+	page_order = ['today'] + list(dict.fromkeys(i.split('/')[0] for i in gl2f.board.definitions()['active']))
 
 
 def selected(tree, items):
