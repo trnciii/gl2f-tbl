@@ -10,61 +10,46 @@ class const:
 	pages = gl2f.board.tree()
 	groups = ['girls2', 'lucky2', 'lovely2']
 	members = {g: list(gl2f.member.of_group(g).keys()) for g in groups}
-	page_order = ['today'] + list(dict.fromkeys(i.split('/')[0] for i in gl2f.board.active()))
+	page_order = ['today'] + list(dict.fromkeys(i.split('/')[0] for i in gl2f.board.definitions()['active']))
 
+class CommandSet:
+	def __init__(self, tree, items):
+		self.tree = tree
+		self.items = items
 
-def selected(tree, items):
-	for i in tree.selection():
-		yield items[int(i)]
+	def _selected(self):
+		for i in self.tree.selection():
+			yield self.items[int(i)]
 
-def create_copy_url(tree, items):
-	def f():
-		text = ' '.join(map(gl2f.content_url, selected(tree, items)))
-		print('copying text', text, flush=True)
-		pyperclip.copy(text)
-	return f
-
-def create_copy_title(tree, items):
-	def f():
-		text = ' '.join(map(
-			lambda i: i['values']['title'],
-			selected(tree, items)
-		))
-		print('copying text', text, flush=True)
-		pyperclip.copy(text)
-	return f
-
-def create_copy_titleurl(tree, items):
-	def f():
-		text = ' '.join(map(
-			lambda i: i['values']['title'] + ' ' + gl2f.content_url(i),
-			selected(tree, items)
-		))
-		print('copying text', text, flush=True)
-		pyperclip.copy(text)
-	return f
-
-def create_open(tree, items):
-	def f():
-		for i in selected(tree, items):
+	def open(self):
+		for i in self._selected():
 			url = gl2f.content_url(i)
-			print('opening', url, flush=True)
+			print(f'Opening {url}', flush=True)
 			webbrowser.open(url, new=0, autoraise=True)
-	return f
+
+	def copy_url(self):
+		text = ' '.join(map(gl2f.content_url, self._selected()))
+		print(f'Copy text {text}', flush=True)
+		pyperclip.copy(text)
+
+	def copy_title(self):
+		text = ' '.join(map(lambda i:i['values']['title'], self._selected()))
+		print(f'Copy title {text}', flush=True)
+		pyperclip.copy(text)
+
+	def copy_title_url(self):
+		text = ' '.join(map(lambda i: i['values']['title'] + ' ' + gl2f.content_url(i), self._selected()))
+		print(f'Copy text {text}', flush=True)
+		pyperclip.copy(text)
 
 
-def add_menu(tree, items):
-	create = {
-		'open': create_open,
-		'copy url': create_copy_url,
-		'copy title': create_copy_title,
-		'copy title + url': create_copy_titleurl,
-	}
-
+def add_menu(tree, commands):
 	menu = tk.Menu(tree, tearoff=0)
 
-	for k, v in create.items():
-		menu.add_command(label=k, command=v(tree,items))
+	menu.add_command(label='Open', command=commands.open)
+	menu.add_command(label='Copy url', command=commands.copy_url)
+	menu.add_command(label='Copy title', command=commands.copy_title)
+	menu.add_command(label='Copy title and url', command=commands.copy_title_url)
 
 	tree.bind('<Button-3>', lambda e:menu.post(e.x_root, e.y_root))
 	tree.bind('<Button-2>', lambda e:menu.post(e.x_root, e.y_root))
@@ -105,8 +90,10 @@ def create_table(root, cols, items):
 		tree.insert(parent='', index='end', iid=index,
 			values=[colspec[k]['format'](item) for k in cols])
 
+	commands = CommandSet(tree, items)
 
-	add_menu(tree, items)
+	tree.bind('<Double-1>', lambda _: commands.open())
+	add_menu(tree, commands)
 
 	scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=tree.yview)
 	scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
